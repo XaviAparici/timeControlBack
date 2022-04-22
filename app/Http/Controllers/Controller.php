@@ -15,21 +15,24 @@ class Controller extends BaseController
 
     public function index()
     {
-        $sql = 'SELECT * FROM usuarios';
+        $sql = "select * from usuarios";
         $usuarios = DB::select($sql);
+        return $usuarios;
     }
 
     public function horaInicio(Request $request)
     {
         $ubicacion = json_encode($request->ubicacion);
         $fechaHoy = date("Y-m-d");
-        DB::insert('insert into registrohoras (ubicacion) values (?)', [$ubicacion]);
+        DB::insert("insert into registrohoras (ubicacion, idUsuario) values (".$ubicacion." ,1)");
     }
 
     public function getData()
     {
         $fechaHoy = date("Y-m-d");
-        $mostrarHora = DB::select("select * from registrohoras where idUsuario = 1 and horaInicio BETWEEN '".$fechaHoy." 00:00:00' and '".$fechaHoy." 23:59:59'");
+        $sql = "select horaInicio, horaFin from registrohoras where idUsuario = 1 and horaInicio BETWEEN '".$fechaHoy." 00:00:00' and '".$fechaHoy." 23:59:59' ORDER by horaInicio ASC LIMIT 1";
+        $mostrar = DB::select($sql);
+        return $mostrar;
     }
 
     public function horaFin()
